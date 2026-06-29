@@ -1,4 +1,4 @@
-import { retrievePage, updatePage, type NotionConfig } from "./notionApi";
+import { retrievePage, updatePage, type NotionConfig } from "./notionApi.js";
 import type { NotionPage } from "./propertyMap";
 
 /**

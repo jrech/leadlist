@@ -11,14 +11,14 @@ import {
   updatePage,
   verifyToken,
   type NotionConfig,
-} from "./notion/notionApi";
-import { readDoc, writeDoc } from "./notion/notionDocs";
+} from "./notion/notionApi.js";
+import { readDoc, writeDoc } from "./notion/notionDocs.js";
 import {
   mapLeadPatchToProperties,
   mapPageToLead,
   NOTION_DOC_PROPERTY,
   type LeadPatch,
-} from "./notion/propertyMap";
+} from "./notion/propertyMap.js";
 
 /**
  * The configured Express app — all middleware, routes, and business logic.

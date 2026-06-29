@@ -1,4 +1,4 @@
-import app from "../server/app";
+import app from "../server/app.js";
 
 /**
  * Vercel serverless entrypoint. Vercel's Node.js runtime treats a default
