@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens ported from the original Outreach Studio PoC.
+ * Original hex values are kept as comments for reference; shadcn/ui
+ * consumes the HSL channel triplets below.
+ */
+@layer base {
+  :root {
+    --background: 225 22% 8%; /* #0F1117 */
+    --foreground: 228 27% 92%; /* #E8EAF0 */
+
+    --card: 226 22% 15%; /* #1E2330 */
+    --card-foreground: 228 27% 92%;
+
+    --popover: 224 22% 12%; /* #171B26 */
+    --popover-foreground: 228 27% 92%;
+
+    --primary: 252 96% 68%; /* #7C5CFC accent */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 226 22% 15%;
+    --secondary-foreground: 228 27% 92%;
+
+    --muted: 226 22% 15%;
+    --muted-foreground: 220 9% 46%; /* #6B7280 */
+
+    --accent: 252 96% 74%; /* #9B7FFE accent2 */
+    --accent-foreground: 0 0% 100%;
+
+    --success: 160 64% 52%; /* #34D399 */
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 226 18% 21%; /* #2A2F3E */
+    --input: 228 17% 26%; /* #353B4E */
+    --ring: 252 96% 68%;
+
+    --radius: 0.625rem; /* 10px */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}

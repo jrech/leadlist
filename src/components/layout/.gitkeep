@@ -1,0 +1,4 @@
+# App chrome composed from shadcn primitives:
+#   AppHeader (logo, title, LanguageSwitch, version badge)
+#   WorkflowTabs (3-step nav, driven by @/app/routes)
+# Built in the UI milestone.

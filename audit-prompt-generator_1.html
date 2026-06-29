@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outreach Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0F1117;
+    --surface:  #171B26;
+    --card:     #1E2330;
+    --border:   #2A2F3E;
+    --border2:  #353B4E;
+    --accent:   #7C5CFC;
+    --accent2:  #9B7FFE;
+    --accent-bg:#7C5CFC18;
+    --green:    #34D399;
+    --green-bg: #34D39912;
+    --amber:    #FBBF24;
+    --text:     #E8EAF0;
+    --muted:    #6B7280;
+    --subtle:   #3A4155;
+    --radius:   10px;
+    --radius-lg:16px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .logo {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+    letter-spacing: -0.5px;
+  }
+  header h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+  header p  { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+  .lang-switch {
+    display: flex; align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 3px; gap: 2px;
+  }
+  .lang-btn {
+    font-size: 11px; font-weight: 600;
+    padding: 4px 11px; border-radius: 16px;
+    border: none; background: transparent;
+    color: var(--muted); cursor: pointer;
+    font-family: inherit; transition: all .15s;
+    letter-spacing: 0.3px;
+  }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+
+  .badge-header {
+    font-size: 11px; font-weight: 500;
+    padding: 4px 10px; border-radius: 20px;
+    background: var(--accent-bg); color: var(--accent2);
+    border: 1px solid rgba(124,92,252,.18);
+    letter-spacing: 0.3px;
+  }
+
+  /* Tab bar */
+  .tabbar {
+    display: flex; gap: 4px;
+    padding: 0 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    padding: 12px 18px;
+    font-size: 13px; font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all .15s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
+  .tab .step-num {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600;
+  }
+  .tab.active .step-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .view { flex: 1; min-height: 0; display: none; }
+  .view.active { display: grid; grid-template-columns: 380px 1fr; }
+
+  .panel-left {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 22px;
+    display: flex; flex-direction: column;
+    gap: 22px; overflow-y: auto;
+  }
+
+  .section-label {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  select, input[type="text"], textarea {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 9px 12px;
+    transition: border-color .15s;
+    width: 100%;
+  }
+  select {
+    appearance: none;
+    padding-right: 36px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  select:hover { border-color: var(--accent); }
+  select:focus, input:focus, textarea:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+  }
+  select option { background: #1E2330; }
+  textarea { resize: vertical; min-height: 120px; line-height: 1.6; font-size: 13px; }
+  textarea.tall { min-height: 200px; }
+  ::placeholder { color: var(--subtle); }
+
+  .pill-group { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill {
+    font-size: 12px; font-weight: 500;
+    padding: 6px 14px; border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: var(--card); color: var(--muted);
+    cursor: pointer; transition: all .15s; user-select: none;
+  }
+  .pill:hover { border-color: var(--accent2); color: var(--text); }
+  .pill.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent2); }
+  .pill.active-green { background: var(--green-bg); border-color: rgba(52,211,153,.38); color: var(--green); }
+
+  .hint-text { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.6; }
+  .hint-text strong { color: var(--text); font-weight: 500; }
+
+  .btn-generate {
+    width: 100%; padding: 13px;
+    border-radius: var(--radius);
+    background: var(--accent); color: #fff;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all .15s; letter-spacing: -0.2px; margin-top: auto;
+  }
+  .btn-generate:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-generate:active { transform: translateY(0); }
+  .btn-generate svg { width: 16px; height: 16px; }
+  .btn-generate:disabled { background: var(--border2); cursor: not-allowed; transform: none; color: var(--muted); }
+
+  .panel-right { display: flex; flex-direction: column; background: var(--bg); overflow: hidden; }
+
+  .output-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px; border-bottom: 1px solid var(--border);
+    background: var(--surface); gap: 12px; flex-shrink: 0;
+  }
+  .output-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .output-tag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; letter-spacing: 0.3px; }
+  .tag-platform { background: var(--accent-bg); color: var(--accent2); border: 1px solid rgba(124,92,252,.25); }
+  .tag-type { background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,211,153,.25); }
+  .output-title { font-size: 13px; font-weight: 500; color: var(--muted); }
+
+  .btn-copy {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500;
+    padding: 7px 14px; border-radius: var(--radius);
+    background: var(--card); border: 1px solid var(--border2);
+    color: var(--text); cursor: pointer; font-family: inherit;
+    transition: all .15s; flex-shrink: 0;
+  }
+  .btn-copy:hover { border-color: var(--accent); color: var(--accent2); }
+  .btn-copy svg { width: 13px; height: 13px; }
+
+  .scan-bar { height: 2px; background: var(--border); display: none; overflow: hidden; flex-shrink: 0; }
+  .scan-bar.active { display: block; }
+  .scan-fill {
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+    width: 40%; animation: scan .9s ease-in-out infinite;
+  }
+  @keyframes scan { 0% { transform: translateX(-200%); } 100% { transform: translateX(400%); } }
+
+  .prompt-area { flex: 1; overflow-y: auto; padding: 24px; }
+
+  .empty-state {
+    height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    color: var(--muted); text-align: center;
+  }
+  .empty-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--card); border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 4px;
+  }
+  .empty-state h3 { font-size: 14px; font-weight: 500; color: var(--text); }
+  .empty-state p { font-size: 12px; max-width: 280px; line-height: 1.6; }
+
+  .prompt-box {
+    display: none;
+    background: var(--card); border: 1px solid var(--border2);
+    border-radius: var(--radius-lg); padding: 20px 22px;
+    font-family: 'Courier New', monospace; font-size: 12.5px;
+    line-height: 1.85; color: #C8D0E0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  /* Email variant cards */
+  .variant {
+    display: none;
+    background: var(--card); border: 1px solid var(--border2);
+    border-radius: var(--radius-lg); padding: 0;
+    margin-bottom: 18px; overflow: hidden;
+  }
+  .variant-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .variant-label { display: flex; align-items: center; gap: 9px; }
+  .variant-badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px; background: var(--accent-bg);
+    color: var(--accent2); border: 1px solid rgba(124,92,252,.25);
+    letter-spacing: 0.3px;
+  }
+  .variant-desc { font-size: 12px; color: var(--muted); }
+  .btn-copy-sm {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 500;
+    padding: 5px 11px; border-radius: 8px;
+    background: var(--bg); border: 1px solid var(--border2);
+    color: var(--text); cursor: pointer; font-family: inherit;
+    transition: all .15s;
+  }
+  .btn-copy-sm:hover { border-color: var(--accent); color: var(--accent2); }
+  .btn-copy-sm svg { width: 12px; height: 12px; }
+  .variant-subject {
+    padding: 12px 18px 0;
+    font-size: 13px;
+  }
+  .variant-subject .sub-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .variant-subject .sub-text { color: var(--text); font-weight: 500; margin-top: 2px; }
+  .variant-body {
+    padding: 14px 18px 18px;
+    font-size: 13px; line-height: 1.75;
+    color: #C8D0E0; white-space: pre-wrap;
+  }
+
+  .stats-bar {
+    display: none; padding: 12px 24px;
+    border-top: 1px solid var(--border); background: var(--surface);
+    gap: 20px; align-items: center; flex-shrink: 0;
+  }
+  .stats-bar.visible { display: flex; }
+  .stat { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+  .stat strong { color: var(--text); font-weight: 500; font-size: 12px; }
+  .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border2); }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+
+  @media (max-width: 760px) {
+    .view.active { grid-template-columns: 1fr; }
+    .panel-right { min-height: 50vh; }
+    header, .tabbar { padding-left: 16px; padding-right: 16px; }
+    .panel-left { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">OS</div>
+  <div>
+    <h1 id="h-title">Outreach Studio</h1>
+    <p id="h-sub">Od auditu k odeslanému emailu — celý cold outreach workflow</p>
+  </div>
+  <div class="header-right">
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('cs')" id="lang-cs">CS</button>
+      <button class="lang-btn" onclick="setLang('en')" id="lang-en">EN</button>
+    </div>
+    <span class="badge-header">v3.0</span>
+  </div>
+</header>
+
+<div class="tabbar">
+  <div class="tab active" onclick="setTab('audit')" id="tab-audit">
+    <span class="step-num">1</span><span id="tab-audit-label">Audit prompt</span>
+  </div>
+  <div class="tab" onclick="setTab('email')" id="tab-email">
+    <span class="step-num">2</span><span id="tab-email-label">Email z výsledku</span>
+  </div>
+  <div class="tab" onclick="setTab('mockup')" id="tab-mockup">
+    <span class="step-num">3</span><span id="tab-mockup-label">Mockup webu</span>
+  </div>
+</div>
+
+<!-- ════════ VIEW 1: AUDIT PROMPT ════════ -->
+<div class="view active" id="view-audit">
+  <aside class="panel-left">
+    <div>
+      <div class="section-label" id="lbl-client">Klient</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="field">
+          <label id="lbl-industry">Obor</label>
+          <select id="industry"></select>
+        </div>
+        <div class="field">
+          <label id="lbl-goal">Konverzní cíl</label>
+          <select id="goal"></select>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" id="lbl-platform">Platforma</div>
+      <div class="pill-group" id="platform-group">
+        <div class="pill active" data-val="mobile" onclick="setPill('platform-group','mobile')">📱 <span id="p-mobile">Mobil</span></div>
+        <div class="pill" data-val="desktop" onclick="setPill('platform-group','desktop')">🖥 Desktop</div>
+        <div class="pill" data-val="both" onclick="setPill('platform-group','both')" id="p-both">Obojí</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" id="lbl-output">Typ výstupu</div>
+      <div class="pill-group" id="output-group">
+        <div class="pill active active-green" data-val="single" onclick="setPill('output-group','single')" id="o-single">Cold outreach</div>
+        <div class="pill" data-val="full" onclick="setPill('output-group','full')" id="o-full">Plný audit</div>
+      </div>
+      <p class="hint-text" id="hint-text"></p>
+    </div>
+    <button class="btn-generate" onclick="generate()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <span id="btn-generate-label">Vygenerovat prompt</span>
+    </button>
+  </aside>
+
+  <main class="panel-right">
+    <div class="output-header">
+      <div class="output-meta">
+        <span class="output-title" id="output-title"></span>
+        <span class="output-tag tag-platform" id="tag-platform" style="display:none"></span>
+        <span class="output-tag tag-type" id="tag-type" style="display:none"></span>
+      </div>
+      <button class="btn-copy" id="copy-btn" onclick="copyPrompt()" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        <span id="copy-label">Kopírovat</span>
+      </button>
+    </div>
+    <div class="scan-bar" id="scan-bar"><div class="scan-fill"></div></div>
+    <div class="prompt-area">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">⚡</div>
+        <h3 id="empty-title">Prompt čeká na generování</h3>
+        <p id="empty-sub">Vyber obor, konverzní cíl, platformu a typ auditu — pak klikni na tlačítko vlevo.</p>
+      </div>
+      <pre class="prompt-box" id="prompt-box"></pre>
+    </div>
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat"><strong id="stat-words">—</strong> <span id="stat-words-lbl">slov</span></div>
+      <div class="dot"></div>
+      <div class="stat"><strong id="stat-chars">—</strong> <span id="stat-chars-lbl">znaků</span></div>
+      <div class="dot"></div>
+      <div class="stat"><strong id="stat-platform">—</strong></div>
+      <div class="dot"></div>
+      <div class="stat"><span id="stat-ready">Připraveno pro</span> <strong>GPT-4o</strong></div>
+    </div>
+  </main>
+</div>
+
+<!-- ════════ VIEW 2: EMAIL COMPOSER ════════ -->
+<div class="view" id="view-email">
+  <aside class="panel-left">
+    <div>
+      <div class="section-label" id="lbl-input">Výsledek z ChatGPT</div>
+      <div class="field">
+        <label id="lbl-paste">Vlož sem výstup auditu</label>
+        <textarea id="audit-result" class="tall" placeholder="PROBLEM: ...&#10;BUSINESS IMPACT: ...&#10;QUICK FIX: ..."></textarea>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" id="lbl-details">Detaily</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="field">
+          <label id="lbl-company">Název firmy</label>
+          <input type="text" id="company-name" placeholder="Acme s.r.o.">
+        </div>
+        <div class="field">
+          <label id="lbl-contact">Jméno kontaktu (volitelné)</label>
+          <input type="text" id="contact-name" placeholder="Jan Novák">
+        </div>
+        <div class="field">
+          <label id="lbl-yourname">Tvé jméno</label>
+          <input type="text" id="your-name" placeholder="Jonas">
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" id="lbl-channel">Kanál</div>
+      <div class="pill-group" id="channel-group">
+        <div class="pill active" data-val="email" onclick="setPill('channel-group','email')">Email</div>
+        <div class="pill" data-val="linkedin" onclick="setPill('channel-group','linkedin')">LinkedIn DM</div>
+      </div>
+    </div>
+    <button class="btn-generate" onclick="generateEmail()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      <span id="btn-email-label">Vygenerovat zprávy</span>
+    </button>
+  </aside>
+
+  <main class="panel-right">
+    <div class="output-header">
+      <div class="output-meta">
+        <span class="output-title" id="email-output-title"></span>
+        <span class="output-tag tag-type" id="email-tag" style="display:none"></span>
+      </div>
+    </div>
+    <div class="scan-bar" id="email-scan-bar"><div class="scan-fill"></div></div>
+    <div class="prompt-area">
+      <div class="empty-state" id="email-empty-state">
+        <div class="empty-icon">✉️</div>
+        <h3 id="email-empty-title">Zprávy se objeví tady</h3>
+        <p id="email-empty-sub">Vlož výsledek auditu z ChatGPT a vyplň detaily firmy. Vygeneruju ti 3 strategicky odlišné varianty.</p>
+      </div>
+      <div id="variants-wrap"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ════════ VIEW 3: MOCKUP PROMPT ════════ -->
+<div class="view" id="view-mockup">
+  <aside class="panel-left">
+    <div>
+      <div class="section-label" id="lbl-m-context">Kontext</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="field">
+          <label id="lbl-m-industry">Obor</label>
+          <select id="m-industry"></select>
+        </div>
+        <div class="field">
+          <label id="lbl-m-problem">Problém z auditu (vlož z ChatGPT)</label>
+          <textarea id="m-problem" placeholder="PROBLEM: ...&#10;QUICK FIX: ..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" id="lbl-m-scope">Co zobrazit</div>
+      <div class="pill-group" id="scope-group">
+        <div class="pill active" data-val="full" onclick="setPill('scope-group','full')" id="sc-full">Celá homepage</div>
+        <div class="pill" data-val="hero" onclick="setPill('scope-group','hero')" id="sc-hero">Hero / first screen</div>
+        <div class="pill" data-val="section" onclick="setPill('scope-group','section')" id="sc-section">Sekce s problémem</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" id="lbl-m-device">Zařízení</div>
+      <div class="pill-group" id="device-group">
+        <div class="pill active" data-val="both" onclick="setPill('device-group','both')" id="dv-both">Desktop + mobil</div>
+        <div class="pill" data-val="desktop" onclick="setPill('device-group','desktop')" id="dv-desktop">Desktop</div>
+        <div class="pill" data-val="tablet" onclick="setPill('device-group','tablet')" id="dv-tablet">Tablet</div>
+        <div class="pill" data-val="mobile" onclick="setPill('device-group','mobile')" id="dv-mobile">Mobil</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" id="lbl-m-style">Vizuální směr</div>
+      <div class="pill-group" id="style-group">
+        <div class="pill active" data-val="clean" onclick="setPill('style-group','clean')" id="st-clean">Clean / minimal</div>
+        <div class="pill" data-val="premium" onclick="setPill('style-group','premium')" id="st-premium">Premium</div>
+        <div class="pill" data-val="bold" onclick="setPill('style-group','bold')" id="st-bold">Bold</div>
+      </div>
+    </div>
+    <button class="btn-generate" onclick="generateMockup()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <span id="btn-mockup-label">Vygenerovat image prompt</span>
+    </button>
+  </aside>
+
+  <main class="panel-right">
+    <div class="output-header">
+      <div class="output-meta">
+        <span class="output-title" id="mockup-output-title"></span>
+        <span class="output-tag tag-platform" id="mockup-tag-scope" style="display:none"></span>
+        <span class="output-tag tag-type" id="mockup-tag-style" style="display:none"></span>
+      </div>
+      <button class="btn-copy" id="mockup-copy-btn" onclick="copyMockup()" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        <span id="mockup-copy-label">Kopírovat</span>
+      </button>
+    </div>
+    <div class="scan-bar" id="mockup-scan-bar"><div class="scan-fill"></div></div>
+    <div class="prompt-area">
+      <div class="empty-state" id="mockup-empty-state">
+        <div class="empty-icon">🎨</div>
+        <h3 id="mockup-empty-title">Image prompt se objeví tady</h3>
+        <p id="mockup-empty-sub">Vlož problém z auditu a vyber rozsah. Vygeneruju prompt pro GPT Image, který zmodernizuje web a opraví ten konkrétní problém.</p>
+      </div>
+      <pre class="prompt-box" id="mockup-prompt-box"></pre>
+    </div>
+    <div class="stats-bar" id="mockup-stats-bar">
+      <div class="stat"><span id="mockup-stat-note">Vlož do</span> <strong>GPT Image 2.0</strong></div>
+      <div class="dot"></div>
+      <div class="stat"><span id="mockup-stat-hint">Concept mockup, ne produkční web</span></div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ════════ i18n ════════
+const i18n = {
+  cs: {
+    headerSub:'Od auditu k odeslanému emailu — celý cold outreach workflow',
+    tabAudit:'Audit prompt', tabEmail:'Email z výsledku', tabMockup:'Mockup webu',
+    lblClient:'Klient', lblIndustry:'Obor', lblGoal:'Konverzní cíl',
+    lblPlatform:'Platforma', lblOutput:'Typ výstupu',
+    pMobile:'Mobil', pBoth:'Obojí', oSingle:'Cold outreach', oFull:'Plný audit',
+    hintSingle:'Cold outreach', hintSingleDesc:'jedna kritická věc, max 5 vět.',
+    hintFull:'Plný audit', hintFullDesc:'interní brief před discovery callem.',
+    btnGenerate:'Vygenerovat prompt', copyLabel:'Kopírovat', copiedLabel:'Zkopírováno',
+    emptyTitle:'Prompt čeká na generování',
+    emptySub:'Vyber obor, konverzní cíl, platformu a typ auditu — pak klikni na tlačítko vlevo.',
+    outputReady:'Připraveno pro', statWords:'slov', statChars:'znaků',
+    platformLabels:{ mobile:'Mobil (390px)', desktop:'Desktop (1440px)', both:'Mobil + Desktop' },
+    typeLabels:{ single:'Cold outreach', full:'Plný audit' },
+    // Email tab
+    lblInput:'Výsledek z ChatGPT', lblPaste:'Vlož sem výstup auditu',
+    lblDetails:'Detaily', lblCompany:'Název firmy', lblContact:'Jméno kontaktu (volitelné)',
+    lblYourname:'Tvé jméno', lblChannel:'Kanál',
+    btnEmail:'Vygenerovat zprávy',
+    emailEmptyTitle:'Zprávy se objeví tady',
+    emailEmptySub:'Vlož výsledek auditu z ChatGPT a vyplň detaily firmy. Vygeneruju ti 3 strategicky odlišné varianty.',
+    needResult:'Nejdřív vlož výsledek auditu z ChatGPT.',
+    subjectLabel:'Předmět',
+    mLblContext:'Kontext', mLblIndustry:'Obor', mLblProblem:'Problém z auditu (vlož z ChatGPT)',
+    mLblScope:'Co zobrazit', mLblStyle:'Vizuální směr',
+    mLblDevice:'Zařízení',
+    dvBoth:'Desktop + mobil', dvDesktop:'Desktop', dvTablet:'Tablet', dvMobile:'Mobil',
+    deviceLabels:{ both:'Desktop + mobil', desktop:'Desktop', tablet:'Tablet', mobile:'Mobil' },
+    scFull:'Celá homepage', scHero:'Hero / first screen', scSection:'Sekce s problémem',
+    stClean:'Clean / minimal', stPremium:'Premium', stBold:'Bold',
+    btnMockup:'Vygenerovat image prompt',
+    mockupEmptyTitle:'Image prompt se objeví tady',
+    mockupEmptySub:'Vlož problém z auditu a vyber rozsah. Vygeneruju prompt pro GPT Image, který zmodernizuje web a opraví ten konkrétní problém.',
+    mockupNeedProblem:'Nejdřív vlož problém z auditu.',
+    mockupStatNote:'Vlož do', mockupStatHint:'Concept mockup, ne produkční web',
+    scopeLabels:{ full:'Celá homepage', hero:'Hero', section:'Sekce' },
+    styleLabels:{ clean:'Clean', premium:'Premium', bold:'Bold' },
+    variants:[
+      { badge:'Přímý', desc:'Rovnou k věci, vysoká důvěra' },
+      { badge:'Soft', desc:'Přátelský, nízký tlak' },
+      { badge:'Value-first', desc:'Hodnota dřív než pitch' }
+    ],
+    industries:[
+      {val:'clinic',label:'Klinika / zdravotnictví'},{val:'law',label:'Advokát / právní služby'},
+      {val:'hotel',label:'Hotel / ubytování'},{val:'adventure',label:'Adventure / turistika'},
+      {val:'restaurant',label:'Restaurace / gastro'},{val:'ecommerce',label:'E-shop'},
+      {val:'saas',label:'SaaS / software'},{val:'freelancer',label:'Freelancer / konzultant'},
+      {val:'generic',label:'Obecné SMB'}
+    ],
+    goals:[
+      {val:'call',label:'Telefonní poptávka'},{val:'form',label:'Formulář / kontakt'},
+      {val:'booking',label:'Online rezervace'},{val:'purchase',label:'Přímý nákup'},
+      {val:'email',label:'Odběr newsletteru'}
+    ]
+  },
+  en: {
+    headerSub:'From audit to sent email — the full cold outreach workflow',
+    tabAudit:'Audit prompt', tabEmail:'Email from result', tabMockup:'Website mockup',
+    lblClient:'Client', lblIndustry:'Industry', lblGoal:'Conversion goal',
+    lblPlatform:'Platform', lblOutput:'Output type',
+    pMobile:'Mobile', pBoth:'Both', oSingle:'Cold outreach', oFull:'Full audit',
+    hintSingle:'Cold outreach', hintSingleDesc:'one critical issue, max 5 sentences.',
+    hintFull:'Full audit', hintFullDesc:'internal brief before a discovery call.',
+    btnGenerate:'Generate prompt', copyLabel:'Copy', copiedLabel:'Copied',
+    emptyTitle:'Prompt ready to generate',
+    emptySub:'Choose an industry, conversion goal, platform and output type — then click the button on the left.',
+    outputReady:'Ready for', statWords:'words', statChars:'chars',
+    platformLabels:{ mobile:'Mobile (390px)', desktop:'Desktop (1440px)', both:'Mobile + Desktop' },
+    typeLabels:{ single:'Cold outreach', full:'Full audit' },
+    lblInput:'ChatGPT result', lblPaste:'Paste the audit output here',
+    lblDetails:'Details', lblCompany:'Company name', lblContact:'Contact name (optional)',
+    lblYourname:'Your name', lblChannel:'Channel',
+    btnEmail:'Generate messages',
+    emailEmptyTitle:'Messages will appear here',
+    emailEmptySub:'Paste the audit result from ChatGPT and fill in the company details. I\'ll generate 3 strategically different variants.',
+    needResult:'Paste the audit result from ChatGPT first.',
+    subjectLabel:'Subject',
+    mLblContext:'Context', mLblIndustry:'Industry', mLblProblem:'Audit problem (paste from ChatGPT)',
+    mLblScope:'What to show', mLblStyle:'Visual direction',
+    mLblDevice:'Device',
+    dvBoth:'Desktop + mobile', dvDesktop:'Desktop', dvTablet:'Tablet', dvMobile:'Mobile',
+    deviceLabels:{ both:'Desktop + mobile', desktop:'Desktop', tablet:'Tablet', mobile:'Mobile' },
+    scFull:'Full homepage', scHero:'Hero / first screen', scSection:'Problem section',
+    stClean:'Clean / minimal', stPremium:'Premium', stBold:'Bold',
+    btnMockup:'Generate image prompt',
+    mockupEmptyTitle:'Image prompt will appear here',
+    mockupEmptySub:'Paste the audit problem and pick a scope. I\'ll generate a GPT Image prompt that modernizes the site and fixes that specific problem.',
+    mockupNeedProblem:'Paste the audit problem first.',
+    mockupStatNote:'Paste into', mockupStatHint:'Concept mockup, not a production site',
+    scopeLabels:{ full:'Full homepage', hero:'Hero', section:'Section' },
+    styleLabels:{ clean:'Clean', premium:'Premium', bold:'Bold' },
+    variants:[
+      { badge:'Direct', desc:'Straight to the point, high confidence' },
+      { badge:'Soft', desc:'Friendly, low pressure' },
+      { badge:'Value-first', desc:'Value before the pitch' }
+    ],
+    industries:[
+      {val:'clinic',label:'Clinic / healthcare'},{val:'law',label:'Law firm / legal services'},
+      {val:'hotel',label:'Hotel / accommodation'},{val:'adventure',label:'Adventure / outdoor tourism'},
+      {val:'restaurant',label:'Restaurant / food & beverage'},{val:'ecommerce',label:'E-commerce / online store'},
+      {val:'saas',label:'SaaS / software product'},{val:'freelancer',label:'Freelancer / consultant / agency'},
+      {val:'generic',label:'General SMB'}
+    ],
+    goals:[
+      {val:'call',label:'Phone inquiry / call'},{val:'form',label:'Contact form submission'},
+      {val:'booking',label:'Online booking'},{val:'purchase',label:'Direct purchase'},
+      {val:'email',label:'Newsletter signup'}
+    ]
+  }
+};
+
+const industryData = {
+  clinic:{label:'clinic / healthcare provider',trust:'certificates, team photos, patient testimonials'},
+  law:{label:'law firm / legal services',trust:'education, experience, case studies'},
+  hotel:{label:'hotel / accommodation / guesthouse',trust:'interior photos, guest reviews, location'},
+  adventure:{label:'adventure tourism / outdoor activities',trust:'action photos, participant count, safety certifications'},
+  restaurant:{label:'restaurant / café / food & beverage',trust:'food photos, reviews, opening hours'},
+  ecommerce:{label:'e-commerce / online store',trust:'product reviews, free shipping, return policy'},
+  saas:{label:'SaaS / software product',trust:'user count, company logos, case studies'},
+  freelancer:{label:'freelancer / consultant / agency',trust:'portfolio, client testimonials, process'},
+  generic:{label:'local business / SMB',trust:'years of experience, testimonials, certifications'}
+};
+const industryDataCs = {
+  clinic:{label:'klinika / zdravotnické zařízení',trust:'certifikáty, fotky týmu, reference pacientů'},
+  law:{label:'advokátní kancelář / právní služby',trust:'vzdělání, zkušenosti, případové studie'},
+  hotel:{label:'hotel / penzion / ubytování',trust:'fotky interiéru, hodnocení hostů, lokace'},
+  adventure:{label:'adventure turismus / outdoor aktivity',trust:'fotky z akcí, počet účastníků, bezpečnostní certifikáty'},
+  restaurant:{label:'restaurace / kavárna / gastronomie',trust:'fotky jídla, recenze, otevírací doba'},
+  ecommerce:{label:'e-shop / online prodej',trust:'recenze produktů, doprava zdarma, vrácení zboží'},
+  saas:{label:'SaaS / software produkt',trust:'počet uživatelů, loga firem, případové studie'},
+  freelancer:{label:'freelancer / konzultant / agentura',trust:'portfolio, reference klientů, proces práce'},
+  generic:{label:'lokální firma / SMB',trust:'roky zkušeností, reference, certifikace'}
+};
+const goalData = {
+  call:'phone inquiry (click-to-call / call button)', form:'contact form submission',
+  booking:'completing an online booking', purchase:'completing a purchase / add to cart',
+  email:'newsletter signup / lead magnet'
+};
+const goalDataCs = {
+  call:'telefonní poptávka (kliknutí na číslo / call button)', form:'vyplnění kontaktního formuláře',
+  booking:'dokončení online rezervace', purchase:'dokončení nákupu / přidání do košíku',
+  email:'přihlášení k newsletteru / lead magnet'
+};
+const modernPatterns = {
+  clinic:'an online appointment booking widget high on the page, trust badges and certifications, doctor profile cards with real photos, clearly categorized services, a sticky "book appointment" CTA',
+  law:'an authority-first hero stating credentials and results, a stats band (cases won, years of practice), practice-area cards, a prominent "free consultation" booking, warm but professional photography',
+  hotel:'full-bleed hospitality imagery, a sticky booking bar with date picker, room cards with pricing and amenities, highlighted guest reviews, a location and surroundings section with a map',
+  adventure:'an immersive full-screen hero photo or video, experience cards showing difficulty/duration/price, authentic photos from real trips as social proof, subtle urgency (limited spots), a clear booking flow',
+  restaurant:'an appetizing full-width food photography hero, a sticky reservation button, menu highlights with photos, clearly visible opening hours, ambiance and interior photos',
+  ecommerce:'a product-forward hero, a clean responsive product grid, visible trust signals (ratings, free shipping, easy returns), a sticky add-to-cart, and a low-friction path to checkout',
+  saas:'a clear value-proposition hero with a real product screenshot or UI preview, benefit-focused feature cards, a social-proof logo strip, transparent pricing, and a single strong "start free trial" CTA',
+  freelancer:'a portfolio-forward hero, case-study cards that lead with client results, a simple 3-4 step process section, highlighted testimonials, and one unmistakable primary CTA',
+  generic:'a clear value-proposition hero, prominent trust signals, clean service or product cards, a single primary CTA repeated strategically, and a modern uncluttered layout'
+};
+const modernPatternsCs = {
+  clinic:'online rezervační widget vysoko na stránce, odznaky důvěry a certifikace, profilové karty lékařů s reálnými fotkami, přehledně kategorizované služby, sticky CTA „objednat se"',
+  law:'hero stavějící na autoritě (kredenciály a výsledky), pruh se statistikami (vyhrané kauzy, roky praxe), karty oblastí specializace, výrazné „nezávazná konzultace", profesionální ale vřelá fotografie',
+  hotel:'celoplošná pohostinná imagery, sticky rezervační lišta s výběrem dat, karty pokojů s cenou a vybavením, zvýrazněné recenze hostů, sekce s lokalitou a okolím včetně mapy',
+  adventure:'immersivní celoobrazovkové hero foto/video, karty zážitků s obtížností/délkou/cenou, autentické fotky z reálných výletů jako social proof, jemná urgence (omezená místa), jasný rezervační flow',
+  restaurant:'chuťově lákavý hero s food fotografií přes celou šířku, sticky tlačítko rezervace, výběr z menu s fotkami, jasně viditelná otevírací doba, fotky interiéru a atmosféry',
+  ecommerce:'hero stavějící na produktu, čistý responzivní grid produktů, viditelné prvky důvěry (hodnocení, doprava zdarma, snadné vrácení), sticky přidání do košíku, košík s nízkým třením',
+  saas:'hero s jasnou hodnotovou nabídkou a reálným screenshotem produktu, karty benefitů, pruh log zákazníků, transparentní ceny, jedno silné CTA „vyzkoušet zdarma"',
+  freelancer:'hero stavějící na portfoliu, case-study karty vedoucí výsledky klientů, jednoduchá sekce s procesem o 3-4 krocích, zvýrazněné reference, jedno nepřehlédnutelné hlavní CTA',
+  generic:'hero s jasnou hodnotovou nabídkou, výrazné prvky důvěry, čisté karty služeb nebo produktů, jedno hlavní CTA strategicky opakované, moderní nepřeplácaný layout'
+};
+const styleDir = {
+  clean:{
+    en:`CLEAN / MINIMAL — in the spirit of Linear, Stripe, and Vercel.
+- Palette: near-white or pure white background (#FFFFFF / #FAFAFA), near-black text (#0A0A0A), exactly ONE restrained accent color (a calm blue, indigo, or soft violet) used sparingly only on CTAs and links. No gradients except a single very subtle one if any.
+- Typography: one crisp geometric/grotesque sans-serif (Inter, Geist, or similar) for everything. Tight, confident headline weight (medium/semibold, NOT black). Small uppercase eyebrow labels with letter-spacing. Generous line-height in body.
+- Layout: strict grid, lots of negative space, thin 1px hairline dividers, small border-radius (8-12px), barely-there shadows. Restraint everywhere — nothing decorative. Functional, engineered, precise.
+- Feel: calm, modern, trustworthy SaaS. The design gets out of the way of the content.`,
+    cs:`CLEAN / MINIMAL — v duchu Linear, Stripe a Vercel.
+- Paleta: skoro bílé nebo čistě bílé pozadí (#FFFFFF / #FAFAFA), skoro černý text (#0A0A0A), přesně JEDNA střídmá akcentní barva (klidná modrá, indigo nebo jemná fialová) použitá úsporně jen na CTA a odkazy. Žádné gradienty, maximálně jeden velmi jemný.
+- Typografie: jedno ostré geometrické/groteskní bezpatkové písmo (Inter, Geist apod.) na všechno. Sebevědomá ale ne přehnaná váha nadpisů (medium/semibold, NE black). Malé verzálkové eyebrow labely s prostrkáním. Velkorysá výška řádku v textu.
+- Layout: striktní grid, hodně negativního prostoru, tenké 1px linky, malý radius (8-12px), sotva viditelné stíny. Střídmost všude, nic dekorativního. Funkční, inženýrské, precizní.
+- Pocit: klidný, moderní, důvěryhodný SaaS. Design ustupuje obsahu.`
+  },
+  premium:{
+    en:`PREMIUM / EDITORIAL — in the spirit of Aesop, Apple, and high-end hospitality brands.
+- Palette: warm sophisticated neutrals — cream, bone, taupe, soft charcoal (#1A1815). Muted and earthy, never bright. Color comes from photography, not UI. Optional single deep accent (forest, oxblood, navy).
+- Typography: an elegant high-contrast SERIF for large headlines (think Canela, Freight, or a refined Didone) paired with a quiet sans-serif for body. Large, airy display type set at a slow, luxurious pace. This serif/sans pairing is the signature.
+- Layout: VERY generous whitespace, oversized margins, asymmetric editorial grid, large full-bleed photography with lots of room around it. Almost no borders or shadows — separation comes from space alone. Slow, considered rhythm.
+- Feel: calm luxury, craftsmanship, understated confidence. Expensive without shouting. Like a printed magazine or a boutique hotel brochure.`,
+    cs:`PREMIUM / EDITORIAL — v duchu Aesop, Apple a luxusních hotelových značek.
+- Paleta: teplé sofistikované neutrály — krémová, kostěná, taupe, jemná uhlová (#1A1815). Tlumené a zemité, nikdy křiklavé. Barva přichází z fotografie, ne z UI. Volitelně jeden hluboký akcent (lesní zelená, oxblood, námořnická).
+- Typografie: elegantní vysoce kontrastní PATKOVÉ písmo na velké nadpisy (Canela, Freight nebo rafinovaná Didona) v kombinaci s tichým bezpatkovým textem. Velká vzdušná display typografie nasazená pomalu a luxusně. Tahle kombinace patkové/bezpatkové je podpis.
+- Layout: VELMI velkorysé bílé místo, předimenzované okraje, asymetrický editorial grid, velká celoplošná fotografie s prostorem kolem. Skoro žádné rámečky ani stíny — oddělení dělá jen prostor. Pomalý, promyšlený rytmus.
+- Pocit: klidný luxus, řemeslo, nenápadné sebevědomí. Drahé bez křiku. Jako tištěný magazín nebo brožura butikového hotelu.`
+  },
+  bold:{
+    en:`BOLD / EXPRESSIVE — in the spirit of Gumroad, Figma, and modern DTC brands.
+- Palette: confident and saturated — a strong primary color (electric blue, hot coral, acid green, or vivid purple) used as LARGE color blocks, not just accents. High contrast pairings, optionally a second clashing-but-intentional color. Colored section backgrounds, not just white.
+- Typography: huge, heavy display headlines (extrabold/black weight) that dominate the hero and span multiple lines. Oversized type as a graphic element. Tight tracking on the big stuff. Playful but controlled.
+- Layout: chunky rounded cards, thick borders or solid color blocks, visible structure, occasional slight rotation or offset for energy. Bigger buttons with strong fills. Still uses whitespace between sections, but each section has personality and color.
+- Feel: energetic, memorable, friendly, confident. A brand with a strong point of view that wants to be remembered, not a quiet utility.`,
+    cs:`BOLD / EXPRESIVNÍ — v duchu Gumroad, Figma a moderních DTC značek.
+- Paleta: sebevědomá a sytá — silná primární barva (elektrická modrá, hot coral, acid green nebo živá fialová) použitá jako VELKÉ barevné bloky, ne jen akcenty. Vysoce kontrastní kombinace, volitelně druhá záměrně "kolidující" barva. Barevná pozadí sekcí, ne jen bílá.
+- Typografie: obrovské těžké display nadpisy (extrabold/black) které ovládnou hero a táhnou se přes víc řádků. Předimenzované písmo jako grafický prvek. Těsné prostrkání u velkých nápisů. Hravé, ale pod kontrolou.
+- Layout: bytelné zaoblené karty, silné rámečky nebo plné barevné bloky, viditelná struktura, občas mírné natočení nebo offset pro energii. Větší tlačítka s výraznou výplní. Pořád používá bílé místo mezi sekcemi, ale každá sekce má osobnost a barvu.
+- Pocit: energický, zapamatovatelný, přátelský, sebevědomý. Značka se silným názorem, která chce být zapamatována, ne tichá utilita.`
+  }
+};
+
+let lang = 'cs';
+let currentPrompt = '';
+let currentMockup = '';
+
+// ════════ Tabs ════════
+function setTab(tab) {
+  ['audit','email','mockup'].forEach(x=>{
+    document.getElementById('tab-'+x).classList.toggle('active', tab===x);
+    document.getElementById('view-'+x).classList.toggle('active', tab===x);
+  });
+}
+
+// ════════ Language ════════
+function setLang(l) {
+  lang = l;
+  document.getElementById('lang-cs').classList.toggle('active', l==='cs');
+  document.getElementById('lang-en').classList.toggle('active', l==='en');
+  const t = i18n[l];
+  const set = (id,val) => { const e=document.getElementById(id); if(e) e.textContent=val; };
+
+  set('h-sub',t.headerSub);
+  set('tab-audit-label',t.tabAudit); set('tab-email-label',t.tabEmail);
+  set('lbl-client',t.lblClient); set('lbl-industry',t.lblIndustry); set('lbl-goal',t.lblGoal);
+  set('lbl-platform',t.lblPlatform); set('lbl-output',t.lblOutput);
+  set('p-mobile',t.pMobile); set('p-both',t.pBoth); set('o-single',t.oSingle); set('o-full',t.oFull);
+  document.getElementById('hint-text').innerHTML =
+    `<strong>${t.hintSingle}</strong> — ${t.hintSingleDesc}<br><strong>${t.hintFull}</strong> — ${t.hintFullDesc}`;
+  set('btn-generate-label',t.btnGenerate); set('copy-label',t.copyLabel);
+  set('empty-title',t.emptyTitle); set('empty-sub',t.emptySub);
+  set('stat-words-lbl',t.statWords); set('stat-chars-lbl',t.statChars); set('stat-ready',t.outputReady);
+  // Email tab
+  set('lbl-input',t.lblInput); set('lbl-paste',t.lblPaste); set('lbl-details',t.lblDetails);
+  set('lbl-company',t.lblCompany); set('lbl-contact',t.lblContact); set('lbl-yourname',t.lblYourname);
+  set('lbl-channel',t.lblChannel); set('btn-email-label',t.btnEmail);
+  set('email-empty-title',t.emailEmptyTitle); set('email-empty-sub',t.emailEmptySub);
+  // Mockup tab
+  set('tab-mockup-label',t.tabMockup);
+  set('lbl-m-context',t.mLblContext); set('lbl-m-industry',t.mLblIndustry); set('lbl-m-problem',t.mLblProblem);
+  set('lbl-m-scope',t.mLblScope); set('lbl-m-style',t.mLblStyle); set('lbl-m-device',t.mLblDevice);
+  set('sc-full',t.scFull); set('sc-hero',t.scHero); set('sc-section',t.scSection);
+  set('dv-both',t.dvBoth); set('dv-desktop',t.dvDesktop); set('dv-tablet',t.dvTablet); set('dv-mobile',t.dvMobile);
+  set('st-clean',t.stClean); set('st-premium',t.stPremium); set('st-bold',t.stBold);
+  set('btn-mockup-label',t.btnMockup);
+  set('mockup-empty-title',t.mockupEmptyTitle); set('mockup-empty-sub',t.mockupEmptySub);
+  set('mockup-stat-note',t.mockupStatNote); set('mockup-stat-hint',t.mockupStatHint);
+  set('mockup-copy-label',t.copyLabel);
+
+  populateSelect('industry',t.industries);
+  populateSelect('goal',t.goals);
+  populateSelect('m-industry',t.industries);
+
+  // If a prompt was already generated, regenerate it in the new language
+  if (currentPrompt) generate();
+  if (currentMockup) generateMockup();
+}
+
+function populateSelect(id,items) {
+  const sel = document.getElementById(id);
+  const cur = sel.value;
+  sel.innerHTML = items.map(i=>`<option value="${i.val}">${i.label}</option>`).join('');
+  if (cur) sel.value = cur;
+}
+
+// ════════ Pills ════════
+function getPill(g){ return document.querySelector(`#${g} .pill.active`).dataset.val; }
+function setPill(g,v){
+  document.querySelectorAll(`#${g} .pill`).forEach(p=>{
+    p.classList.remove('active');
+    if(g==='output-group') p.classList.remove('active-green');
+  });
+  const el=document.querySelector(`#${g} [data-val="${v}"]`);
+  el.classList.add('active');
+  if(g==='output-group') el.classList.add('active-green');
+}
+
+// ════════ Audit prompt generation ════════
+function buildPromptEn(ind, goalLabel, platLabel, platform, outputType){
+  if(outputType==='single'){
+    const pc = platform==='both'
+      ? `Analyze BOTH the mobile (390px) and desktop (1440px) experience. Simulate whichever view isn't shown.`
+      : platform==='mobile'
+        ? `Focus on the mobile experience — simulate a 390px wide screen.`
+        : `Focus on the desktop experience — simulate a 1440px wide viewport.`;
+    return `You are a UX and conversion rate optimization expert.
+
+Attached is a screenshot of a website.
+Business type: ${ind.label}
+Primary conversion goal: ${goalLabel}
+Platform: ${platLabel}
+
+${pc}
+
+TASK: Identify exactly ONE critical UX issue most likely hurting their conversions right now.
+
+Rules:
+- ONE issue only — the single highest-impact problem
+- Be specific: not "bad CTA" but "the primary CTA is hidden below three sections on mobile"
+- Explain business impact in 1–2 sentences (lost leads, trust damage, high bounce)
+- Suggest a concrete fix in 2–3 sentences
+- Relevant trust signals for this industry: ${ind.trust}
+
+Output format (use exactly):
+PLATFORM: [mobile / desktop / both]
+PROBLEM: [one clear sentence]
+BUSINESS IMPACT: [1–2 sentences]
+QUICK FIX: [2–3 sentences]
+
+Tone: direct, professional, no sugarcoating.
+Write like a senior designer briefing a client — not a sales pitch.`;
+  }
+  const mb=`
+── MOBILE AUDIT (390px) ──────────────────────────────
+
+1. Above the fold
+   · Value proposition clear within 3 seconds?
+   · Primary CTA visible without scrolling?
+   · Friction blockers? (oversized hero, cookie banners, autoplay)
+
+2. CTA design
+   · Buttons ≥44px height for thumb use?
+   · Primary vs secondary actions visually distinct?
+   · Competing CTAs diluting focus?
+
+3. Trust signals
+   · ${ind.trust}
+   · Do they appear before or after the CTA?
+
+4. Conversion path
+   · Steps to complete: ${goalLabel}?
+   · Unnecessary form fields or steps?
+   · Fallback contact option available (e.g. phone number)?
+
+5. Technical red flags
+   · Signs of slow load (large unoptimized images, heavy scripts)?
+   · Non-responsive layout signs (horizontal scroll, tiny text)?`;
+  const db=`
+── DESKTOP AUDIT (1440px) ────────────────────────────
+
+1. Hero & above the fold
+   · Headline communicates value immediately?
+   · CTA visible without scrolling on a 1080px height screen?
+   · Visual hierarchy guides the eye toward the CTA?
+
+2. Layout & whitespace
+   · Content width optimal (≤1200px)? Or stretched too wide?
+   · Sufficient whitespace between sections?
+   · F-pattern / Z-pattern reading flow respected?
+
+3. Navigation
+   · Primary nav clear and uncluttered?
+   · CTA or key contact visible in the header?
+   · Sticky nav — present? Should it be?
+
+4. Trust & social proof
+   · ${ind.trust}
+   · Placement logical in the scroll journey?
+   · Trust elements visually credible (real photos vs stock)?
+
+5. Conversion path
+   · Clicks to reach: ${goalLabel}?
+   · Forms: length appropriate? Inline validation present?
+   · Unnecessary popups or modals blocking the path?`;
+  const blocks = platform==='mobile'?mb:platform==='desktop'?db:mb+'\n'+db;
+  return `You are a senior UX auditor specializing in conversion optimization.
+
+Attached is a screenshot of a website.
+Business type: ${ind.label}
+Primary conversion goal: ${goalLabel}
+Platform scope: ${platLabel}
+Key trust signals for this industry: ${ind.trust}
+${blocks}
+
+──────────────────────────────────────────────────────
+For each area above, rate it:
+  ✅ OK  /  ⚠️ NEEDS IMPROVEMENT  /  🔴 CRITICAL
+
+Then provide:
+
+PRIORITY FIXES (top 3, ranked by conversion impact):
+1. [Issue] → [Specific fix]
+2. [Issue] → [Specific fix]
+3. [Issue] → [Specific fix]
+
+QUICK WIN: One change implementable in under 1 hour.
+
+Tone: blunt, actionable. This is an internal brief, not a client-facing report.`;
+}
+
+function buildPromptCs(ind, goalLabel, platLabel, platform, outputType){
+  if(outputType==='single'){
+    const pc = platform==='both'
+      ? `Analyzuj OBĚ verze — mobilní (390px) i desktopovou (1440px). Tu, kterou nevidíš na screenshotu, si domysli.`
+      : platform==='mobile'
+        ? `Zaměř se na mobilní verzi — simuluj obrazovku širokou 390px.`
+        : `Zaměř se na desktopovou verzi — simuluj viewport široký 1440px.`;
+    return `Jsi expert na UX a optimalizaci konverzí (CRO).
+
+V příloze je screenshot webové stránky.
+Typ podnikání: ${ind.label}
+Hlavní konverzní cíl: ${goalLabel}
+Platforma: ${platLabel}
+
+${pc}
+
+ÚKOL: Najdi přesně JEDEN kritický UX problém, který nejspíš právě teď nejvíc snižuje konverze.
+
+Pravidla:
+- Pouze JEDEN problém — ten s největším dopadem
+- Buď konkrétní: ne „špatné CTA", ale „hlavní CTA tlačítko je na mobilu schované až pod třemi sekcemi textu"
+- Vysvětli byznysový dopad v 1–2 větách (ztracené poptávky, ztráta důvěry, vysoký bounce)
+- Navrhni konkrétní řešení ve 2–3 větách
+- Relevantní prvky důvěry pro tento obor: ${ind.trust}
+
+Formát výstupu (dodrž přesně):
+PLATFORMA: [mobil / desktop / obojí]
+PROBLÉM: [jedna jasná věta]
+BYZNYSOVÝ DOPAD: [1–2 věty]
+RYCHLÉ ŘEŠENÍ: [2–3 věty]
+
+Tón: přímý, profesionální, bez lakování na růžovo.
+Piš jako senior designer, který brífuje klienta — ne jako obchoďák.`;
+  }
+  const mb=`
+── MOBILNÍ AUDIT (390px) ──────────────────────────────
+
+1. Above the fold (první obrazovka)
+   · Je hodnotová nabídka jasná do 3 sekund?
+   · Je hlavní CTA vidět bez scrollování?
+   · Překážky? (předimenzovaný hero, cookie lišty, autoplay)
+
+2. Design CTA
+   · Mají tlačítka výšku ≥44px pro ovládání palcem?
+   · Jsou hlavní a vedlejší akce vizuálně odlišené?
+   · Konkurují si CTA navzájem a tříští pozornost?
+
+3. Prvky důvěry
+   · ${ind.trust}
+   · Objevují se před nebo až za CTA?
+
+4. Konverzní cesta
+   · Kolik kroků k cíli: ${goalLabel}?
+   · Zbytečná pole ve formuláři nebo kroky navíc?
+   · Je k dispozici záložní kontakt (např. telefon)?
+
+5. Technické varovné signály
+   · Známky pomalého načítání (velké neoptimalizované obrázky, těžké skripty)?
+   · Známky nerespozivního layoutu (horizontální scroll, malé písmo)?`;
+  const db=`
+── DESKTOPOVÝ AUDIT (1440px) ──────────────────────────
+
+1. Hero a první obrazovka
+   · Sděluje headline hodnotu okamžitě?
+   · Je CTA vidět bez scrollování na obrazovce vysoké 1080px?
+   · Vede vizuální hierarchie oko směrem k CTA?
+
+2. Layout a bílé místo
+   · Je šířka obsahu optimální (≤1200px)? Nebo je roztažený moc?
+   · Dost bílého místa mezi sekcemi?
+   · Respektuje čtecí tok do F nebo Z?
+
+3. Navigace
+   · Je hlavní navigace přehledná a nepřeplácaná?
+   · Je v hlavičce vidět CTA nebo klíčový kontakt?
+   · Sticky navigace — je? Měla by být?
+
+4. Důvěra a social proof
+   · ${ind.trust}
+   · Je umístění logické v rámci scrollování?
+   · Působí prvky důvěry věrohodně (reálné fotky vs stock)?
+
+5. Konverzní cesta
+   · Kolik kliknutí k cíli: ${goalLabel}?
+   · Formuláře: přiměřená délka? Inline validace?
+   · Vyskakovací okna nebo modály blokující cestu?`;
+  const blocks = platform==='mobile'?mb:platform==='desktop'?db:mb+'\n'+db;
+  return `Jsi senior UX auditor specializovaný na optimalizaci konverzí.
+
+V příloze je screenshot webové stránky.
+Typ podnikání: ${ind.label}
+Hlavní konverzní cíl: ${goalLabel}
+Rozsah platforem: ${platLabel}
+Klíčové prvky důvěry pro tento obor: ${ind.trust}
+${blocks}
+
+──────────────────────────────────────────────────────
+Každou oblast výše ohodnoť:
+  ✅ OK  /  ⚠️ KE ZLEPŠENÍ  /  🔴 KRITICKÉ
+
+Pak uveď:
+
+PRIORITNÍ OPRAVY (top 3, seřazené podle dopadu na konverze):
+1. [Problém] → [Konkrétní řešení]
+2. [Problém] → [Konkrétní řešení]
+3. [Problém] → [Konkrétní řešení]
+
+RYCHLÁ VÝHRA: Jedna změna realizovatelná do 1 hodiny.
+
+Tón: přímý, akční. Tohle je interní brief, ne reportáž pro klienta.`;
+}
+
+function generate() {
+  const industry=document.getElementById('industry').value;
+  const goal=document.getElementById('goal').value;
+  const platform=getPill('platform-group');
+  const outputType=getPill('output-group');
+  const t=i18n[lang];
+  const ind = lang==='cs' ? industryDataCs[industry] : industryData[industry];
+  const goalLabel = lang==='cs' ? goalDataCs[goal] : goalData[goal];
+  const platLabel=t.platformLabels[platform], typeLabel=t.typeLabels[outputType];
+
+  const sb=document.getElementById('scan-bar');
+  sb.classList.add('active'); setTimeout(()=>sb.classList.remove('active'),900);
+
+  const prompt = lang==='cs'
+    ? buildPromptCs(ind, goalLabel, platLabel, platform, outputType)
+    : buildPromptEn(ind, goalLabel, platLabel, platform, outputType);
+
+  currentPrompt=prompt;
+  document.getElementById('empty-state').style.display='none';
+  const box=document.getElementById('prompt-box');
+  box.style.display='block'; box.textContent=prompt;
+  const inds=i18n[lang].industries;
+  const il=(inds.find(i=>i.val===industry)||{}).label||ind.label;
+  document.getElementById('output-title').textContent=`${il.split('/')[0].trim()} — ${typeLabel}`;
+  const tp=document.getElementById('tag-platform'); tp.textContent=platLabel; tp.style.display='inline-flex';
+  const tt=document.getElementById('tag-type'); tt.textContent=typeLabel; tt.style.display='inline-flex';
+  document.getElementById('copy-btn').style.display='flex';
+  document.getElementById('stat-words').textContent=prompt.trim().split(/\s+/).length;
+  document.getElementById('stat-chars').textContent=prompt.length;
+  document.getElementById('stat-platform').textContent=platLabel;
+  document.getElementById('stats-bar').classList.add('visible');
+}
+
+function doCopy(text){
+  if(navigator.clipboard && window.isSecureContext){
+    return navigator.clipboard.writeText(text);
+  }
+  return new Promise((resolve,reject)=>{
+    const ta=document.createElement('textarea');
+    ta.value=text;
+    ta.style.position='fixed';
+    ta.style.top='-9999px';
+    ta.style.left='-9999px';
+    ta.setAttribute('readonly','');
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    try {
+      const ok=document.execCommand('copy');
+      document.body.removeChild(ta);
+      ok ? resolve() : reject(new Error('execCommand failed'));
+    } catch(e){
+      document.body.removeChild(ta);
+      reject(e);
+    }
+  });
+}
+
+function flashCopied(btn, copiedIcon, restoreHtml){
+  const t=i18n[lang];
+  btn.innerHTML=`${copiedIcon} ${t.copiedLabel}`;
+  btn.style.color='var(--green)'; btn.style.borderColor='rgba(52,211,153,.38)';
+  setTimeout(()=>{
+    btn.innerHTML=restoreHtml;
+    btn.style.color=''; btn.style.borderColor='';
+  },2000);
+}
+
+const ICON_CHECK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>`;
+const ICON_COPY=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
+
+function copyPrompt(){
+  if(!currentPrompt) return;
+  const t=i18n[lang];
+  doCopy(currentPrompt).then(()=>{
+    const b=document.getElementById('copy-btn');
+    flashCopied(b, ICON_CHECK, `${ICON_COPY} <span id="copy-label">${t.copyLabel}</span>`);
+  }).catch(()=>alert(lang==='cs'?'Kopírování selhalo. Označ text a zkopíruj ručně (Ctrl+C).':'Copy failed. Select the text and copy manually (Ctrl+C).'));
+}
+
+// ════════ Mockup image prompt ════════
+function extractProblem(raw){
+  if(!raw.trim()) return '';
+  const re=/(PROBLEM|PROBLÉM)\s*[:：]\s*([\s\S]*?)(?=\n[A-ZÁ-Ž][A-ZÁ-Ž ]+\s*[:：]|$)/i;
+  const m=raw.match(re);
+  if(m && m[2].trim()) return m[2].trim().replace(/\s+/g,' ');
+  // fallback: first 2 sentences
+  return raw.trim().split(/\n\n|\. /).slice(0,2).join('. ').trim();
+}
+function extractFix(raw){
+  const re=/(QUICK FIX|FIX|RYCHLÉ ŘEŠENÍ|ŘEŠENÍ|QUICK WIN)\s*[:：]\s*([\s\S]*?)(?=\n[A-ZÁ-Ž][A-ZÁ-Ž ]+\s*[:：]|$)/i;
+  const m=raw.match(re);
+  return m && m[2].trim() ? m[2].trim().replace(/\s+/g,' ') : '';
+}
+
+function generateMockup(){
+  const t=i18n[lang];
+  const raw=document.getElementById('m-problem').value;
+  const problem=extractProblem(raw);
+  if(!problem){ alert(t.mockupNeedProblem); return; }
+  const fix=extractFix(raw);
+
+  const industry=document.getElementById('m-industry').value;
+  const scope=getPill('scope-group');
+  const style=getPill('style-group');
+  const device=getPill('device-group');
+  const ind = lang==='cs' ? industryDataCs[industry] : industryData[industry];
+  const patterns = lang==='cs' ? modernPatternsCs[industry] : modernPatterns[industry];
+  const styleText = styleDir[style][lang];
+
+  const deviceTextCs = {
+    both:'Ukaž vedle sebe v JEDNOM obrázku desktopovou verzi (široký prohlížeč, 1440px) vlevo a mobilní verzi (telefon, 390px) vpravo.',
+    desktop:'Ukaž pouze desktopovou verzi (široký prohlížeč, 1440px) v realistickém rámu prohlížeče.',
+    tablet:'Ukaž pouze tabletovou verzi (na výšku, ~810px) v realistickém rámu tabletu.',
+    mobile:'Ukaž pouze mobilní verzi (telefon, 390px) v realistickém rámu telefonu.'
+  };
+  const deviceTextEn = {
+    both:'Show side by side in ONE image — the desktop version (wide browser, 1440px) on the left and the mobile version (phone, 390px) on the right.',
+    desktop:'Show the desktop version only (wide browser, 1440px) inside a realistic browser frame.',
+    tablet:'Show the tablet version only (portrait, ~810px) inside a realistic tablet frame.',
+    mobile:'Show the mobile version only (phone, 390px) inside a realistic phone frame.'
+  };
+
+  const sb=document.getElementById('mockup-scan-bar');
+  sb.classList.add('active'); setTimeout(()=>sb.classList.remove('active'),900);
+
+  let prompt='';
+  if(lang==='cs'){
+    const scopeText = scope==='full'
+      ? 'kompletní moderní homepage (full-page návrh shora dolů s několika sekcemi)'
+      : scope==='hero'
+        ? 'pouze hero sekci / první obrazovku (above the fold)'
+        : 'konkrétní sekci, která řeší níže popsaný problém';
+    prompt=`Vygeneruj obrázek (image) — fotorealistický mockup moderního redesignu webové stránky.
+
+OBOR: ${ind.label}
+CO ZOBRAZIT: ${scopeText}
+ZAŘÍZENÍ: ${deviceTextCs[device]}
+
+PROBLÉM, KTERÝ MUSÍ NÁVRH VYŘEŠIT:
+${problem}${fix?`\n\nSMĚR ŘEŠENÍ: ${fix}`:''}
+
+MODERNÍ UX VZORY PRO TENTO OBOR (zapracuj je):
+${patterns}
+
+VIZUÁLNÍ STYL — DODRŽ PŘESNĚ TENTO SMĚR:
+${styleText}
+
+DŮLEŽITÉ POKYNY K LAYOUTU:
+- Mezi sekcemi nech VÝRAZNĚ víc bílého místa (whitespace). Sekce nesmí být namačkané na sebe — dej jim prostor dýchat, velkorysý vertikální padding.
+- Jasná vizuální hierarchie, čitelná moderní typografie.
+- Realistický obsah (žádný lorem ipsum, žádné rozbité texty) — použij věrohodné nadpisy a popisky relevantní pro tento obor.
+- Profesionální, důvěryhodný dojem. Reálná fotografie místo placeholderů.
+- Jeden jasný hlavní CTA, vizuálně odlišený.
+
+Výstup: jeden čistý, ostrý mockup obrázek připravený k prezentaci klientovi.`;
+  } else {
+    const scopeText = scope==='full'
+      ? 'a complete modern homepage (full-page top-to-bottom design with several sections)'
+      : scope==='hero'
+        ? 'the hero section / first screen only (above the fold)'
+        : 'the specific section that addresses the problem described below';
+    prompt=`Create an image — a photorealistic mockup of a modern website redesign.
+
+INDUSTRY: ${ind.label}
+WHAT TO SHOW: ${scopeText}
+DEVICES: ${deviceTextEn[device]}
+
+PROBLEM THE DESIGN MUST SOLVE:
+${problem}${fix?`\n\nFIX DIRECTION: ${fix}`:''}
+
+MODERN UX PATTERNS FOR THIS INDUSTRY (incorporate them):
+${patterns}
+
+VISUAL STYLE — FOLLOW THIS DIRECTION EXACTLY:
+${styleText}
+
+IMPORTANT LAYOUT INSTRUCTIONS:
+- Use SIGNIFICANTLY more whitespace between sections. Sections must not be cramped together — give them room to breathe, with generous vertical padding.
+- Clear visual hierarchy, readable modern typography.
+- Realistic content (no lorem ipsum, no broken text) — use believable headlines and copy relevant to this industry.
+- Professional, trustworthy feel. Real photography instead of placeholders.
+- One clear primary CTA, visually distinct.
+
+Output: a single clean, sharp mockup image ready to present to a client.`;
+  }
+
+  currentMockup=prompt;
+  document.getElementById('mockup-empty-state').style.display='none';
+  const box=document.getElementById('mockup-prompt-box');
+  box.style.display='block'; box.textContent=prompt;
+
+  const inds=i18n[lang].industries;
+  const il=(inds.find(i=>i.val===industry)||{}).label||ind.label;
+  document.getElementById('mockup-output-title').textContent=il.split('/')[0].trim();
+  const ts=document.getElementById('mockup-tag-scope'); ts.textContent=t.deviceLabels[device]; ts.style.display='inline-flex';
+  const tst=document.getElementById('mockup-tag-style'); tst.textContent=t.styleLabels[style]; tst.style.display='inline-flex';
+  document.getElementById('mockup-copy-btn').style.display='flex';
+  document.getElementById('mockup-stats-bar').classList.add('visible');
+}
+
+function copyMockup(){
+  if(!currentMockup) return;
+  const t=i18n[lang];
+  doCopy(currentMockup).then(()=>{
+    const b=document.getElementById('mockup-copy-btn');
+    flashCopied(b, ICON_CHECK, `${ICON_COPY} <span id="mockup-copy-label">${t.copyLabel}</span>`);
+  }).catch(()=>alert(lang==='cs'?'Kopírování selhalo. Označ text a zkopíruj ručně (Ctrl+C).':'Copy failed. Select the text and copy manually (Ctrl+C).'));
+}
+
+// ════════ Email composer ════════
+function parseAudit(raw){
+  const out={ problem:'', impact:'', fix:'' };
+  const grab=(keys)=>{
+    for(const k of keys){
+      const re=new RegExp(k+'\\s*[:：]\\s*([\\s\\S]*?)(?=\\n[A-ZÁ-Ž][A-ZÁ-Ž ]+\\s*[:：]|$)','i');
+      const m=raw.match(re);
+      if(m && m[1].trim()) return m[1].trim().replace(/\s+/g,' ');
+    }
+    return '';
+  };
+  out.problem=grab(['PROBLEM','PROBLÉM']);
+  out.impact=grab(['BUSINESS IMPACT','IMPACT','DOPAD']);
+  out.fix=grab(['QUICK FIX','FIX','QUICK WIN','ŘEŠENÍ','OPRAVA']);
+  // Fallback: if nothing parsed, use first 2 sentences as problem
+  if(!out.problem){
+    const firstChunk = raw.trim().split(/\n\n|\. /).slice(0,2).join('. ').trim();
+    out.problem = firstChunk;
+  }
+  return out;
+}
+
+function generateEmail(){
+  const raw=document.getElementById('audit-result').value.trim();
+  const t=i18n[lang];
+  if(!raw){ alert(t.needResult); return; }
+
+  const company=document.getElementById('company-name').value.trim();
+  const contact=document.getElementById('contact-name').value.trim();
+  const yourName=document.getElementById('your-name').value.trim();
+  const channel=getPill('channel-group');
+
+  const sb=document.getElementById('email-scan-bar');
+  sb.classList.add('active'); setTimeout(()=>sb.classList.remove('active'),900);
+
+  const a=parseAudit(raw);
+  const greetName = contact || (lang==='cs'?'dobrý den':'hi there');
+  const sign = yourName || (lang==='cs'?'[Tvé jméno]':'[Your name]');
+  const comp = company || (lang==='cs'?'váš web':'your website');
+
+  let variants=[];
+
+  if(lang==='cs'){
+    const greet = contact ? `Ahoj ${contact},` : `Dobrý den,`;
+    // Direct
+    variants.push({
+      subject: `${company||'Váš web'} — jedna věc, co vás možná stojí zákazníky`,
+      body:`${greet}
+
+koukal jsem na ${comp} a všiml jsem si jedné konkrétní věci:
+
+${a.problem}${a.impact?`\n\n${a.impact}`:''}
+
+${a.fix?`Rychlé řešení: ${a.fix}`:''}
+
+Mám pár dalších nápadů, jak to vyladit. Hodí se vám 15 minut tento týden?
+
+${sign}`
+    });
+    // Soft
+    variants.push({
+      subject: `Rychlý postřeh k webu ${company||''}`.trim(),
+      body:`${greet}
+
+nechci otravovat — jen mě při procházení ${comp} zaujala jedna drobnost, která by mohla pomoct s konverzemi:
+
+${a.problem}
+
+${a.fix?`Dalo by se to vyřešit celkem snadno — ${a.fix.charAt(0).toLowerCase()+a.fix.slice(1)}`:''}
+
+Kdyby vás zajímalo víc, rád pošlu pár konkrétních tipů. Žádný tlak.
+
+Hezký den,
+${sign}`
+    });
+    // Value-first
+    variants.push({
+      subject: `Pár nápadů na web ${company||'vaší firmy'}`,
+      body:`${greet}
+
+věnuju se webdesignu a optimalizaci konverzí, a když jsem narazil na ${comp}, hned mi padlo do oka tohle:
+
+${a.problem}${a.impact?`\n\nProč to řeším: ${a.impact}`:''}
+
+${a.fix?`Konkrétně bych zkusil: ${a.fix}`:''}
+
+Tohle je jen jedna věc z několika, co jsem si všiml. Kdyby dávalo smysl projít to spolu, ozvěte se — klidně nezávazně.
+
+${sign}`
+    });
+  } else {
+    const greet = contact ? `Hi ${contact},` : `Hi there,`;
+    variants.push({
+      subject: `${company||'Your website'} — one thing that might be costing you customers`,
+      body:`${greet}
+
+I took a look at ${comp} and noticed one specific thing:
+
+${a.problem}${a.impact?`\n\n${a.impact}`:''}
+
+${a.fix?`Quick fix: ${a.fix}`:''}
+
+I've got a few more ideas on how to tighten this up. Do you have 15 minutes this week?
+
+${sign}`
+    });
+    variants.push({
+      subject: `Quick note about ${company||'your site'}`.trim(),
+      body:`${greet}
+
+I don't want to clutter your inbox — but while browsing ${comp}, one small thing caught my eye that could help your conversions:
+
+${a.problem}
+
+${a.fix?`It'd be a fairly easy fix — ${a.fix.charAt(0).toLowerCase()+a.fix.slice(1)}`:''}
+
+If you'd like, I'm happy to send a few concrete tips. No pressure either way.
+
+Best,
+${sign}`
+    });
+    variants.push({
+      subject: `A few ideas for ${company||'your'} website`,
+      body:`${greet}
+
+I work in web design and conversion optimization, and when I came across ${comp}, this jumped out at me right away:
+
+${a.problem}${a.impact?`\n\nWhy it matters: ${a.impact}`:''}
+
+${a.fix?`Specifically, I'd try: ${a.fix}`:''}
+
+This is just one of a few things I spotted. If it'd make sense to walk through it together, just reply — no obligation.
+
+${sign}`
+    });
+  }
+
+  renderVariants(variants, channel);
+}
+
+function renderVariants(variants, channel){
+  const t=i18n[lang];
+  const wrap=document.getElementById('variants-wrap');
+  document.getElementById('email-empty-state').style.display='none';
+  const channelLabel = channel==='email' ? (lang==='cs'?'Email':'Email') : 'LinkedIn DM';
+  const et=document.getElementById('email-tag');
+  et.textContent=channelLabel; et.style.display='inline-flex';
+  document.getElementById('email-output-title').textContent =
+    lang==='cs'?'3 varianty připravené ke kopírování':'3 variants ready to copy';
+
+  wrap.innerHTML = variants.map((v,i)=>{
+    const meta=t.variants[i];
+    // LinkedIn: drop subject, trim sign-off spacing
+    const showSubject = channel==='email';
+    const bodyText = channel==='linkedin'
+      ? v.body.replace(/\n\n(Best,|Hezký den,|Best regards,)\n/, '\n\n')
+      : v.body;
+    return `
+    <div class="variant" style="display:block">
+      <div class="variant-head">
+        <div class="variant-label">
+          <span class="variant-badge">${meta.badge}</span>
+          <span class="variant-desc">${meta.desc}</span>
+        </div>
+        <button class="btn-copy-sm" onclick="copyVariant(${i})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span>${t.copyLabel}</span>
+        </button>
+      </div>
+      ${showSubject?`<div class="variant-subject"><div class="sub-label">${t.subjectLabel}</div><div class="sub-text">${escapeHtml(v.subject)}</div></div>`:''}
+      <div class="variant-body" id="vbody-${i}">${escapeHtml(bodyText)}</div>
+    </div>`;
+  }).join('');
+
+  // store for copy
+  window._variants = variants.map((v,i)=>{
+    const showSubject = channel==='email';
+    const bodyText = channel==='linkedin'
+      ? v.body.replace(/\n\n(Best,|Hezký den,|Best regards,)\n/, '\n\n')
+      : v.body;
+    return showSubject ? `${v.subject}\n\n${bodyText}` : bodyText;
+  });
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyVariant(i){
+  const t=i18n[lang];
+  const text=window._variants[i];
+  const btns=document.querySelectorAll('.btn-copy-sm');
+  const b=btns[i];
+  const orig=b.innerHTML;
+  doCopy(text).then(()=>{
+    b.innerHTML=`${ICON_CHECK} <span>${t.copiedLabel}</span>`;
+    b.style.color='var(--green)'; b.style.borderColor='rgba(52,211,153,.38)';
+    setTimeout(()=>{ b.innerHTML=orig; b.style.color=''; b.style.borderColor=''; },2000);
+  }).catch(()=>alert(lang==='cs'?'Kopírování selhalo. Označ text a zkopíruj ručně (Ctrl+C).':'Copy failed. Select the text and copy manually (Ctrl+C).'));
+}
+
+// ════════ Init ════════
+setLang('cs');
+</script>
+</body>
+</html>

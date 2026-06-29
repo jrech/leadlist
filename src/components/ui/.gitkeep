@@ -1,0 +1,2 @@
+# shadcn/ui primitives land here via `npx shadcn@latest add <component>`.
+# Configured in components.json (alias "@/components/ui").
