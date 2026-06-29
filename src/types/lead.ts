@@ -1,5 +1,9 @@
-import type { CountryId, IndustryId } from "@/types/domain";
-import type { SyncMetadata } from "@/types/sync";
+// Relative (not "@/…") imports on purpose: this file is reached by the Express
+// server, which Vercel bundles as a serverless function — and Vercel's Node
+// runtime does not resolve tsconfig path aliases. Keeping the server's import
+// graph alias-free lets the function build without path-mapping support.
+import type { CountryId, IndustryId } from "./domain";
+import type { SyncMetadata } from "./sync";
 
 /** Pipeline stage for a lead — matches the Notion `Status` select exactly. */
 export type LeadStatus =

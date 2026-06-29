@@ -41,7 +41,9 @@
       "Bash(tasklist)",
       "Bash(curl -s http://localhost:8787/api/health)",
       "Bash(curl -s -o /dev/null -w \"dev server HTTP %{http_code}\\\\n\" http://localhost:51540/)",
-      "Bash(curl -s -X PATCH http://localhost:8787/api/notion/leads/__TRACKED_VAR__ -H 'Content-Type: application/json' -d '{\"assignee\":\"Jonas\"}')"
+      "Bash(curl -s -X PATCH http://localhost:8787/api/notion/leads/__TRACKED_VAR__ -H 'Content-Type: application/json' -d '{\"assignee\":\"Jonas\"}')",
+      "WebFetch(domain:vercel.com)",
+      "Bash(curl -s http://localhost:5173/api/health)"
     ]
   }
 }
