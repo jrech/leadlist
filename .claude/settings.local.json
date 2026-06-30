@@ -49,7 +49,10 @@
       "Bash(rm -f api/index.ts)",
       "Bash(ls api/)",
       "Bash(node --input-type=module -e \"import\\('file:///D:/Outreach Studio/api/index.js'\\).then\\(m=>{console.log\\('NATIVE ESM ✓ — function default export is a', typeof m.default, '\\(Express handler\\)'\\);process.exit\\(0\\)}\\).catch\\(e=>{console.error\\('FAILED',e.code,e.message\\);process.exit\\(1\\)}\\)\")",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(node_modules/.bin/esbuild server/app.ts --bundle --platform=node --format=esm --packages=external --outfile=\".tmp-catchall/[...path].js\" --log-level=warning)",
+      "Bash(echo \"exit:$?\")",
+      "WebSearch"
     ]
   }
 }
