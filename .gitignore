@@ -29,3 +29,5 @@ dist-ssr
 
 # Vercel
 .vercel
+# Generated serverless function — bundled from server/app.ts by `npm run build:api`
+/api/index.js
