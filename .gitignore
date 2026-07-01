@@ -29,6 +29,6 @@ dist-ssr
 
 # Vercel
 .vercel
-# Generated serverless function — bundled from server/app.ts by `npm run build:api`
-/api/index.js
-/api/[...path].js
+# Generated Express bundle imported by api/index.ts (built by `npm run build:api`).
+# api/index.ts itself IS committed so Vercel detects the function.
+/api/_app.js

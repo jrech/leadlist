@@ -52,7 +52,10 @@
       "Bash(git check-ignore *)",
       "Bash(node_modules/.bin/esbuild server/app.ts --bundle --platform=node --format=esm --packages=external --outfile=\".tmp-catchall/[...path].js\" --log-level=warning)",
       "Bash(echo \"exit:$?\")",
-      "WebSearch"
+      "WebSearch",
+      "Bash(timeout 240 npx --yes vercel@latest build --yes)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(cd \"D:\\\\Outreach Studio\" && echo \"=== removing dead experiments ===\" && rm -f \"api/[...path].ts\" \"api/index.js\" \"api/[...path].js\" && echo \"removed [...path].ts, stale index.js\" && echo \"=== api/ now ===\" && ls -la api/)"
     ]
   }
 }
